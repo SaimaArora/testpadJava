@@ -1,0 +1,13 @@
+UCA - 01/12/25
+
+1) select title from Movie where director = 'Steve Spielberg';
+2) select m.year, r.stars from Movie m, Rating r on m.mId = r.mId where r.stars >= 4 order by r.stars;
+3) select m.title from Movie m left join Rating r on m.mId = r.mId where r.stars = null;
+4) select r.name from Reviewer r, Rating s on r.rId = s.rid where s.ratingDate is null;
+5) select r.name, m.title, s.stars, s.ratingDate from Rating s inner join Reviewer r on r.rId = s.rId inner join Movie m on m.mId = s.mId order by r.name, m.title, s.stars;
+6) select m.title, MAX(s.stars) from Rating s join Movie m on s.mId = m.mId group by(m.title) order by m.title;
+7) select r.name, m.title, MAX(s.starts) from Reviewer r join Rating s on r.rId = s.rId join Movie m on m.mId = m. group by(r.name) having count(*) =2;
+8) select m.title, MAX(s.stars) - MIN(s.stars) as difference from Rating s join Movie m on s.mId = m.mId group by(s.mId) having count(*) > 1 order by(difference) desc;
+9) select r.name from Rating s join Reviewer r join Movie m where m.title = 'Gone with the Wind';
+10) select r.name, m.title, s.stars from Rating s join Reviewer r on s.rId = r.rId join Movie m on s.mId = m.mId where r.name = m.director;
+11)
