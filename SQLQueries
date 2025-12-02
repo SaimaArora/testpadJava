@@ -1,13 +1,31 @@
 UCA - 01/12/25
 
 1) select title from Movie where director = 'Steve Spielberg';
-2) select m.year, r.stars from Movie m, Rating r on m.mId = r.mId where r.stars >= 4 order by r.stars;
+2) select m.year, r.stars from Movie m, Rating r on m.mId = r.mId where r.stars >= 4 order by year;
 3) select m.title from Movie m left join Rating r on m.mId = r.mId where r.stars = null;
 4) select r.name from Reviewer r, Rating s on r.rId = s.rid where s.ratingDate is null;
 5) select r.name, m.title, s.stars, s.ratingDate from Rating s inner join Reviewer r on r.rId = s.rId inner join Movie m on m.mId = s.mId order by r.name, m.title, s.stars;
 6) select m.title, MAX(s.stars) from Rating s join Movie m on s.mId = m.mId group by(m.title) order by m.title;
+6) OR - SELECT DISTINCT RE.name, M.title FROM Rating R1 INNER JOIN Rating R2 ON R1.rId = R2.rID AND R1.mId = R2.mId  AND R2.ratingDate > R1.ratingDate AND R2.stars > R1.stars
+  INNER JOIN Movie M ON M.mID = R1.mId INNER JOIN Reviewer RE ON R1.rID = RE.rID;
+
 7) select r.name, m.title, MAX(s.starts) from Reviewer r join Rating s on r.rId = s.rId join Movie m on m.mId = m. group by(r.name) having count(*) =2;
-8) select m.title, MAX(s.stars) - MIN(s.stars) as difference from Rating s join Movie m on s.mId = m.mId group by(s.mId) having count(*) > 1 order by(difference) desc;
-9) select r.name from Rating s join Reviewer r join Movie m where m.title = 'Gone with the Wind';
-10) select r.name, m.title, s.stars from Rating s join Reviewer r on s.rId = r.rId join Movie m on s.mId = m.mId where r.name = m.director;
-11)
+7)   SELECT M.title AS title, Max(R.stars) AS max_rating FROM Rating AS R INNER JOIN Movie AS M ON M.mID = R.mID GROUP BY(title);
+
+8) select m.title, MAX(s.stars) - MIN(s.stars) as difference from Rating s join Movie m on s.mId = m.mId group by(s.mId) having count(*) > 1 order by(difference) desc, m.title;
+9) (Select AVG(stars) from Movie m inner join Rating where year < 1980) as before (Select AVG(stars) from Movie m inner join Rating where year < 1980)
+
+10) select r.name from Rating s join Reviewer r join Movie m where m.title = 'Gone with the Wind';
+11) select r.name, m.title, s.stars from Rating s join Reviewer r on s.rId = r.rId join Movie m on s.mId = m.mId where r.name = m.director;
+12) select r.name from Reviewer r union select m.title from Movie m order by r.name, m.title;
+13) select m.title from Movie m where mId in (select mId from Rating where rId not in(select rId from Reviewer where name = 'Chris jackson'));
+14) select distinct r1.name, r2.name from Rating t1 join Rating t2 on t1.mid = t2.mid AND t1.rid < t2.rid join Reviewer r1 ON t1.rid = r1.rid join Reviewer r2 ON t2.rid = r2.rid order by r1.name, r2.name;
+15) select r.name, m.title, s.stars from Reviewer r join Rating s on r.rId = s.rid join Movie m on s.mId = m.mId where stars in/is/= (Select MIN(stars) from Rating);
+16) select M.title, AVG(stars) from Rating s inner join Movie m on r.mId = m.mId group by m.title order by avg(stars) desc, m.title;
+17) select r.name from Reviewers r join Rating s on s.rId = r.rId group by(s.rId) count(*) >= 3;
+18) select director, title from Movie m where director in (select director from Movie group by director having count(mId) > 1) order by director, title;
+19) select m.title, avg(stars) from Rating s join Movie m on s.mId = m.mId group by(s.mId) having avg(stars) = (select MAX(avg) from (select avg(stars) avg, mId from Rating group by mid ));
+20) select m.director, m.title, r.stars from Movie m join Rating r on m.mid = r.mid join(
+    select m2.director, max(r2.stars) stars from Movie m2 join Rating r2 on m2.mid = r2.mid where m2.director IS NOT NULL group by m2.director
+    ) t on m.director = t.director and r.stars = t.stars;
+
