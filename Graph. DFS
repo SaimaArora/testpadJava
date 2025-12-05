@@ -1,0 +1,23 @@
+
+void DFSUtil(int st, Set<Integer> visited, List<Integer> result) 
+{ 
+    result.add(st);
+    visited.add(st);
+    List<Integer> adj = adjVertices.getOrDefault(st, new ArrayList<>());
+    for(int node : adj) {
+        if(!visited.contains(node)){
+            DFSUtil(node, visited, result);
+        }
+    }
+} 
+
+void DFS(int st) 
+{ 
+    Set<Integer> visited = new HashSet<>();
+    List<Integer> result = new ArrayList<>();
+    DFSUtil(st, visited, result);
+   
+    for(int num : result){
+        System.out.print(num+" ");
+    }
+}
