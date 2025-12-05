@@ -1,0 +1,80 @@
+import java.util.*;
+// Add other imports if you want to
+// Do NOT change the class name
+class Graph{
+        int V, E;
+        Map<Integer, List<Integer>> adj;
+        Graph(int v, int e) {
+            V = v;
+            E = e;
+            adj = new HashMap<>();
+        }
+        public void addVertice(int n) {
+            adj.putIfAbsent(n, new ArrayList<>());
+        }
+        public void addEdge(int src, int dest) {
+            adj.putIfAbsent(src, new ArrayList<>());
+        adj.putIfAbsent(dest, new ArrayList<>());
+            adj.get(src).add(dest);
+            adj.get(dest).add(src);
+        }
+        class Node{
+            int curr, parent;
+            Node(int c, int p) {
+                curr = c;
+                parent = p;
+            }
+        }
+        public boolean cycleDetection(int st, Set<Integer> visited) {
+            Queue<Node> q = new LinkedList<>();
+            
+            q.offer(new Node(st, st));
+            visited.add(st);
+            while(!q.isEmpty()) {
+                Node num = q.poll();
+                int curr = num.curr, par = num.parent;
+                for(int n : adj.getOrDefault(curr, new ArrayList<>())){
+                    if(!visited.contains(n)) {
+                        q.offer(new Node(n, curr));
+                        visited.add(n);
+                    }
+                    else if(par != n){
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+    }
+
+class Main{
+    
+    public static void main(String[] args)
+    {
+        // Write your code here
+        Scanner sc = new Scanner(System.in);
+        int v = sc.nextInt();
+        int e = sc.nextInt();
+        Graph g = new Graph(v, e);
+        Set<Integer> visited = new HashSet<>();
+        for(int i = 0; i < v; i++){
+            g.addVertice(i);
+        }
+        for(int i  = 0; i < e; i++) {
+            int v1 = sc.nextInt();
+            int v2 = sc.nextInt();
+            g.addEdge(v1, v2);
+        }
+        for(int i = 0; i < v; i++){
+            if(!visited.contains(i)){
+                if(g.cycleDetection(i, visited)){
+                System.out.println("Yes");
+                return;
+            }
+            }
+             
+        }
+        System.out.println("No");
+        
+    }
+}
