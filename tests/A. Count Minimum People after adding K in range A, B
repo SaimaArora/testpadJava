@@ -1,0 +1,18 @@
+public long countMinimumPeople(int n, int m, int[][] city) {
+        long diff[] = new long[n+2];
+        for(int i = 0; i < city.length; i++) {
+            int a = city[i][0];
+            int b = city[i][1];
+            int k = city[i][2];
+            diff[a] += k;
+            diff[b+1] -= k;
+        }
+        int curr = 0, min = Integer.MAX_VALUE;
+        for(int i = 0; i < diff.length;i++){
+            curr+=diff[i];
+            if(curr < min){
+                min = curr;
+            }
+        }
+        return min;
+    }
