@@ -1,0 +1,65 @@
+import java.util.*;
+class Result {
+    static boolean[][] rows = new boolean[9][10];
+    static boolean[][] cols = new boolean[9][10];
+    static boolean[][] boxes = new boolean[9][10];
+    static int solveSudoku(int[][] mat) {
+        List<int[]> emptyCells = new ArrayList<>();
+        // Reset constraints for fresh run
+        rows = new boolean[9][10];
+          cols = new boolean[9][10];
+          boxes = new boolean[9][10];
+        // 3. Initialize constraints and VALIDATE initial board
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                int val = mat[i][j];
+                if (val != 0) {
+                    int boxIndex = (i / 3) * 3 + (j / 3);
+                    // CRITICAL CHECK: If number already exists in constraint, board is invalid.
+                    if (rows[i][val] || cols[j][val] || boxes[boxIndex][val]) {
+                        return -1;
+                    }
+                    rows[i][val] = true;
+                    cols[j][val] = true;
+                    boxes[boxIndex][val] = true;
+                } else {
+                    emptyCells.add(new int[]{i, j});
+                }
+            }
+        }
+        // 4. Start Recursion
+        if (backtrack(0, mat, emptyCells)) {
+            return 1;
+        }
+        return -1;
+    }
+    static boolean backtrack(int idx, int[][] mat, List<int[]> emptyCells) {
+        // Base Case: If we have filled all empty cells
+        if (idx == emptyCells.size()) {
+            return true;
+        }
+        int r = emptyCells.get(idx)[0];
+        int c = emptyCells.get(idx)[1];
+        int boxIndex = (r / 3) * 3 + (c / 3);
+        // Try numbers 1-9
+        for (int num = 1; num <= 9; num++) {
+            if (!rows[r][num] && !cols[c][num] && !boxes[boxIndex][num]) {
+                // DO
+                mat[r][c] = num;
+                rows[r][num] = true;
+                cols[c][num] = true;
+                boxes[boxIndex][num] = true;
+                // RECURSE
+                if (backtrack(idx + 1, mat, emptyCells)) {
+                    return true;
+                }
+                // UNDO (Backtrack)
+                mat[r][c] = 0;
+                rows[r][num] = false;
+                cols[c][num] = false;
+                boxes[boxIndex][num] = false;
+            }
+        }
+        return false;
+    }
+}
