@@ -1,0 +1,16 @@
+private int  stringRecur(int ind1, int ind2, String s1, String s2, int n, int m) {
+        if(ind1 == n || ind2 == m) return 0;
+        if(s1.charAt(ind1) == s2.charAt(ind2)){
+            return 1+ stringRecur(ind1+1, ind2+1, s1, s2, n, m);
+        }
+        else{
+            int skip1 = stringRecur(ind1, ind2+1, s1, s2, n, m);
+            int skip2 = stringRecur(ind1+1, ind2, s1, s2, n, m);
+            return Math.max(skip1, skip2);
+        }
+    }
+    public int getLCS(String s1, String s2) {
+        int n = s1.length(), m = s2.length();
+        int ans = stringRecur(0, 0, s1, s2, n, m);
+        return (n - ans) + (m - ans);
+    }
