@@ -1,0 +1,12 @@
+  private int solve(int remaining, int k) {
+        if (remaining < 0) return 0;
+        if (remaining == 0) return 1;
+        int ways = 0;
+        for(int i = 1; i <= k; i++){
+            ways+=solve(remaining - i, k);
+        }
+        return ways;
+    }
+    public int stepsTillK(int dist, int k) {
+        return solve(dist, k);
+    }
