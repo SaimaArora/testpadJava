@@ -1,0 +1,11 @@
+
+    private boolean canWin(int n) {
+        if(n == 0) return false;
+        if(n >= 1 && !canWin(n - 1)) return true;
+        if (n >= 2 && !canWin(n - 2)) return true;
+        if(n >= 3 && !canWin(n - 3)) return true;
+        return false;
+    }
+    public int minGame(int n) {
+        return canWin(n) ? 1 : 2;
+    }
