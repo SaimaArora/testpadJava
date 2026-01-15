@@ -1,4 +1,18 @@
-
+    private boolean memo(int n, int[] dp) {
+        if(n == 0) return false;
+        if (dp[n] != -1) return dp[n] == 1;
+        boolean can = false;
+        for(int i = 1; i <= 3; i++) {
+            if(n >= i) {
+                if(!memo(n - 1, dp)) {
+                    can = true;
+                    break;
+                }
+            }
+        }
+        dp[n] = can ? 1 : 2;
+        return can;
+    }
     private boolean canWin(int n) {
         if(n == 0) return false;
         if(n >= 1 && !canWin(n - 1)) return true;
@@ -7,5 +21,7 @@
         return false;
     }
     public int minGame(int n) {
-        return canWin(n) ? 1 : 2;
-    }
+        int[] dp = new int[n+1];
+        Arrays.fill(dp, -1);
+        return memo(n, dp) ? 1 : 2;
+    
