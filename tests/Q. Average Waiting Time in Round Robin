@@ -1,0 +1,68 @@
+import java.util.LinkedList;
+import java.util.Queue;
+
+public class RRWaitingTime {
+
+     static class Process{
+        int id, arrival, burst, remaining, waiting;
+
+        Process(int id, int arr, int b, int remain, int wait) {
+            this.id = id;
+            arrival = arr;
+            burst = b;
+            remaining = remain;
+            waiting = wait;
+        }
+
+    }
+
+    static float waitingTime(int[] arrivals, int[] burstTimes, int tq) {
+        int time = 0, arrInd = 0, total = arrivals.length, completed = 0, totalWait = 0;
+        Queue<Process> q = new LinkedList<>();
+        while(arrInd < total && arrivals[arrInd] == 0) {
+            q.offer(new Process(arrInd, arrivals[arrInd], burstTimes[arrInd], burstTimes[arrInd], 0));
+            arrInd++;
+        }
+        while(completed < total) {
+            //if cpu empty -> jump to next arrival of process
+            if(q.isEmpty()) {
+                time = arrivals[arrInd];
+                q.offer(new Process(arrInd, arrivals[arrInd], burstTimes[arrInd], burstTimes[arrInd], 0));
+                arrInd++;
+            }
+            //execute curr process
+            Process curr = q.poll();
+            int slice = Math.min(tq, curr.remaining);
+            curr.remaining -= slice;
+            time+=slice;
+
+            //add any new processes before readding the current one
+            while(arrInd < total && arrivals[arrInd] <= time) {
+                q.offer(new Process(arrInd, arrivals[arrInd], burstTimes[arrInd], burstTimes[arrInd], 0));
+                arrInd++;
+            }
+            if(curr.remaining > 0) {
+                q.add(curr);
+            } else {
+                completed++;
+                curr.waiting = time - curr.arrival - curr.burst;
+                totalWait += curr.waiting;
+            }
+        }
+        return (float)totalWait / total;
+    }
+
+    public static void main(String[] args) {
+         int[] arrivals = {0, 1, 2, 3};
+         int[] burst = {5, 3, 8, 6};
+         int tq = 2;
+         System.out.println("Average waiting time: " + waitingTime(arrivals, burst, tq));
+        //when cpu has gap, so answer should be 0.0 wt
+//        int[] arrivals = {0, 10};
+//        int[] burst = {5, 5};
+//        int tq = 2;
+//        System.out.println("Average waiting time: " + waitingTime(arrivals, burst, tq));
+
+
+    }
+}
