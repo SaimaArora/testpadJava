@@ -1,0 +1,16 @@
+import java.util.Arrays;
+class Result
+{
+    static boolean recursion(int ind, int curr, int[] ar, int sum, int n, Boolean[][] memo) {
+        if(ind >= n || curr > sum) return false;
+        if(sum == curr) return memo[ind][curr] = true;
+        if(memo[ind][curr] != null) return memo[ind][curr];
+        return memo[ind][curr] = recursion(ind+1, curr+ar[ind], ar, sum, n, memo) || recursion(ind+1, curr, ar, sum, n, memo);
+    }
+  static int subsetSum(int a[], int n, int sum){
+    // Write your code here
+      Boolean[][] memo = new Boolean[n+1][sum+1];
+      for(Boolean i[] : memo) Arrays.fill(i, null);
+      return recursion(0, 0, a, sum, n, memo) == true ? 1 : 0;
+  }
+}
