@@ -1,0 +1,38 @@
+
+
+class Result {
+    
+    static class Element{
+        Node root;
+        int level;
+        Element(Node r, int l) {
+            root = r;
+            level = l;
+        }
+    }
+  static Node level(Node root, int key) {
+    // Write your code here
+      int lev = 0;
+      if(root == null) return new Node(-1);
+      Queue<Element> q = new LinkedList<>();
+      q.offer(new Element(root, lev));
+      while(!q.isEmpty()) {
+          Node par = q.peek().root;
+           lev = q.peek().level;
+          q.poll();
+          if(par.data == key )if(!q.isEmpty() && q.peek().level == lev) return q.poll().root; else return new Node(-1);
+          if(par.left != null) {
+              q.offer(new Element(par.left, lev+1));
+          }
+          if(par.right != null) {
+              q.offer(new Element(par.right, lev+1));
+          }
+      }
+    return new Node(-1);
+  }
+  static int findRightSibling(Node root, int key) {
+    // Write your code here
+    Node ans = level(root, key);
+      return ans.data;
+  }
+}
