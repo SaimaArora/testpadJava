@@ -1,0 +1,27 @@
+    public int memoize(int i, int j, int[] a, int[][] memo) {
+        //if same, only one matrix considered, so result 0
+        if(i == j) return 0;
+        if(memo[i][j] != -1) return memo[i][j];
+        int minCost = Integer.MAX_VALUE;
+        for(int k = i ; k < j; k++) {
+            int steps = a[i - 1]*a[k]*a[j] + memoize(i, k, a, memo) + memoize(k+1, j, a, memo);
+            minCost = Math.min(minCost, steps);
+        }
+        return memo[i][j] = minCost;
+    }
+public int recursion(int i, int j, int[] a) {
+        //if same, only one matrix considered, so result 0
+        if(i == j) return 0;
+        int minCost = Integer.MAX_VALUE;
+        for(int k = i ; k < j; k++) {
+            int steps = a[i - 1]*a[k]*a[j] + recursion(i, k, a) + recursion(k+1, j, a);
+            minCost = Math.min(minCost, steps);
+        }
+        return minCost;
+    }
+    public int matrixChainMulitplication(int[] arr) {
+        int n = arr.length;
+        int[][] memo = new int[n][n];
+        for(int[] a : memo) Arrays.fill(a, -1);
+        return memoize(1, arr.length - 1, arr, memo);
+    }
