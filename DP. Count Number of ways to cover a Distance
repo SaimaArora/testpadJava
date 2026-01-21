@@ -1,0 +1,17 @@
+class Result
+{
+    
+    static int recursion(int curr, int d, int k) {
+        if(d < curr) return 0;
+        if(d == curr) return 1;
+        int count = 0;
+        for(int i = 1; i <= k; i++) {
+            count+=recursion(curr+i, d, k);
+        }
+        return count;
+    }
+  static int totalWaysToDistance(int d, int k){
+    // Write your code here
+      return recursion(0, d, k);
+  }
+}
