@@ -1,0 +1,18 @@
+class Result
+{
+    static int recursion(int ind, int curr, int[] val, int[] weight, int target, int[][] memo) {
+        if(ind >= weight.length) return 0;
+        if(curr > target) return 0;
+        if(memo[ind][curr] != -1) return memo[ind][curr];
+        int pick = 0;
+        if (weight[ind] + curr <= target) pick = val[ind] + recursion(ind + 1, curr+weight[ind], val, weight, target, memo);
+        int notPick = recursion(ind+1, curr, val, weight, target, memo);
+        return memo[ind][curr] = Math.max(pick, notPick);
+    }
+  static int zeroOneKnapsack(int val[], int weight[], int n, int capacity){
+    // Write your code here
+      int[][] memo = new int[n][capacity+1];
+      for(int[] i : memo) Arrays.fill(i, -1);
+      return recursion(0, 0, val, weight, capacity, memo);
+  }
+}
