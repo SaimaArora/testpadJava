@@ -1,0 +1,33 @@
+class DetectSquares {
+
+    int[][] freq;
+    List<int[]> points;
+    public DetectSquares() {
+        points = new ArrayList<>();
+        freq = new int[1001][1001];
+    }
+    
+    public void add(int[] point) {
+        freq[point[0]][point[1]] ++;
+        points.add(point);
+    }
+    
+    public int count(int[] point) {
+        int qx = point[0], qy = point[1];
+        int squares = 0;
+        for(int[] p : points) {
+            int x = p[0], y = p[1];
+            if(Math.abs(qy - y) == Math.abs(qx - x) && qx != x) {
+                squares += freq[qx][y] * freq[x][qy];
+            }
+        }
+        return squares;
+    }
+}
+
+/**
+ * Your DetectSquares object will be instantiated and called as such:
+ * DetectSquares obj = new DetectSquares();
+ * obj.add(point);
+ * int param_2 = obj.count(point);
+ */
