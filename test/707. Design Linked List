@@ -1,0 +1,107 @@
+class MyLinkedList {
+    class Node{
+        int val;
+        Node next;
+        Node prev;
+        Node(int val) {
+            this.val = val;
+            next = null;
+            prev = null;
+        }
+    }
+
+    int len;
+    Node head;
+    Node tail;
+    public MyLinkedList() {
+        head = new Node(0);
+        tail = new Node(0);
+        head.next = tail;
+        tail.prev = head;
+        len = 0;
+    }
+    
+    public int get(int index) {
+        if(index >= len) return -1;
+        Node temp = head;
+        int i = 0;
+        while(i <= index) {
+            i++;
+            temp = temp.next;
+        }
+        return temp.val;
+    }
+    
+    public void addAtHead(int val) {
+        Node add = new Node(val);
+        len++;
+        add.next = head.next;
+        head.next.prev = add;
+        head.next = add;
+        add.prev = head;
+    }
+    
+    public void addAtTail(int val) {
+        Node add = new Node(val);
+        len++;
+        tail.prev.next = add;
+        add.prev = tail.prev;
+        add.next = tail;
+        tail.prev = add;
+    }
+    
+    public void addAtIndex(int ind, int val) {
+        int i = 0;
+        Node add = new Node(val);
+        if(ind > len) return;
+        Node temp = head.next;
+        len++;
+        if(ind == len) {
+            tail.prev.next = add;
+            add.prev = tail.prev;
+            add.next = tail;
+            tail.prev = add;
+            return;
+        }
+        while(temp!=null) {
+            if(i == ind){
+                temp.prev.next = add;
+                add.prev = temp.prev;
+                temp.prev = add;
+                add.next = temp;
+                return;
+            }
+            temp = temp.next;
+            i++;
+        }
+        
+    }
+    
+    public void deleteAtIndex(int ind) {
+        if(ind >= len) return;
+        int i = 0;
+        Node temp = head.next;
+        while(temp != null) {
+            if(i == ind) {
+                len--;
+                temp.prev.next = temp.next;
+                temp.next.prev = temp.prev;
+                temp.next = null;
+                temp.prev = null;
+                return;
+            }
+            i++;
+            temp = temp.next;
+        }
+    }
+}
+
+/**
+ * Your MyLinkedList object will be instantiated and called as such:
+ * MyLinkedList obj = new MyLinkedList();
+ * int param_1 = obj.get(index);
+ * obj.addAtHead(val);
+ * obj.addAtTail(val);
+ * obj.addAtIndex(index,val);
+ * obj.deleteAtIndex(index);
+ */
