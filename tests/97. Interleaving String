@@ -1,0 +1,20 @@
+class Solution {
+    public boolean recursive(int i, int j, String s1, String s2, String s3, Boolean[][] memo) {
+        if (i == s1.length() && j == s2.length()) return true;
+        if(memo[i][j] != null) return memo[i][j];
+        if(i < s1.length() && s1.charAt(i) == s3.charAt(i+j)) {
+            if(recursive(i+1, j, s1,s2,s3, memo)) return  memo[i][j] = true;
+        }
+        if(j < s2.length() && s2.charAt(j) == s3.charAt(i+j)) {
+            if(recursive(i, j+1, s1,s2,s3, memo)) return memo[i][j] = true;
+        }
+        return memo[i][j] = false;
+    }
+    public boolean isInterleave(String s1, String s2, String s3) {
+        int n1 = s1.length(), n2 = s2.length(), n3 = s3.length();
+        if(n1+n2 != n3) return false;
+        Boolean[][] memo = new Boolean[n1+1][n2+1];
+        for(Boolean[] i : memo) Arrays.fill(i, null);
+        return recursive(0, 0, s1, s2, s3, memo);
+    }
+}
