@@ -1,0 +1,34 @@
+class Solution {
+    int count = 0;
+    private void checkQueen(int row, Set<Integer> posDiag, Set<Integer> negDiag, Set<Integer> col, char[][] board) {
+        if(row == board.length) {
+            count++;
+            return ;
+        }
+        for(int j = 0; j < board[0].length; j++) {
+            int pos = row+j, neg = row - j;
+            if(posDiag.contains(pos) || negDiag.contains(neg) || col.contains(j)) continue;
+            board[row][j] = 'Q';
+            col.add(j);
+            posDiag.add(pos); negDiag.add(neg);
+            checkQueen(row+1, posDiag, negDiag, col, board);
+            board[row][j] = '.';
+            col.remove(j);
+            posDiag.remove(pos); negDiag.remove(neg);
+        }
+    }
+    
+    public int totalNQueens(int n) {
+        Set<Integer> posDiag = new HashSet<>();
+        Set<Integer> negDiag = new HashSet<>();
+        Set<Integer> col = new HashSet<>();
+        char[][] board = new char[n][n];
+        for(int i = 0; i < board.length; i++) {
+            for(int j = 0; j < board[0].length; j++) {
+                board[i][j] = '.';
+            }
+        }
+        checkQueen(0, posDiag, negDiag, col, board);
+        return count;
+    }
+}
