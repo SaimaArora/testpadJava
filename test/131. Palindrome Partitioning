@@ -1,0 +1,28 @@
+class Solution {
+    private boolean isPalindrome(int st, int end, String s) {
+        while(st <= end) {
+            if(s.charAt(st) != s.charAt(end)) return false;
+            st++;end--;
+        }
+        return true;
+    }
+    private void checkPartition(int ind, List<String> path, List<List<String>> result, String s) {
+        if(ind == s.length()){
+            result.add(new ArrayList<>(path));
+            return;
+        }
+        for (int end = ind; end < s.length(); end++) {
+            if(isPalindrome(ind, end, s)) {
+                path.add(s.substring(ind, end+1));
+                checkPartition(end+1, path, result, s);
+                path.remove(path.size() - 1);
+            }
+        }
+    }
+    public List<List<String>> partition(String s) {
+        List<String> path = new ArrayList<>();
+        List<List<String>> result = new ArrayList<>();
+        checkPartition(0, path, result, s);
+        return result;
+    }
+}
