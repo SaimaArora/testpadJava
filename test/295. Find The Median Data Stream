@@ -1,0 +1,35 @@
+class MedianFinder {
+
+    PriorityQueue<Integer> left;
+    PriorityQueue<Integer> right;
+    int length;
+    public MedianFinder() {
+        left = new PriorityQueue<>((a, b) -> b - a);
+        right = new PriorityQueue<>();
+        length = 0;
+    }
+    
+    public void addNum(int num) {
+        left.offer(num);
+        right.offer(left.poll());
+        if(left.size() < right.size()) {
+            left.offer(right.poll());
+        }
+        length++;
+    }
+    
+    public double findMedian() {
+        if(length % 2 == 0) {
+            int n1 = left.peek(), n2 = right.peek();
+            return ((double)n1+n2) / 2.00; 
+        }
+        else return (double)left.peek();
+    }
+}
+
+/**
+ * Your MedianFinder object will be instantiated and called as such:
+ * MedianFinder obj = new MedianFinder();
+ * obj.addNum(num);
+ * double param_2 = obj.findMedian();
+ */
