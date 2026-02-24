@@ -1,0 +1,36 @@
+class Solution {
+    int[] maxLen = {0};
+    public void recursion(int ind, List<String> arr, boolean[] used, int curr) {
+         maxLen[0] = Math.max(maxLen[0], curr);
+         if(ind >= arr.size()) return;
+       
+        for(int i = ind; i<arr.size();i++) {
+            String s = arr.get(i);
+            if(matches(s, used)) {
+                changeInCurr(used, s);
+                recursion(i+1, arr, used, curr+s.length());
+                changeInCurr(used, s);
+            }
+        }
+    }
+    private boolean matches(String s, boolean[] used) {
+        boolean[] self = new boolean[26];
+        for(char ch : s.toCharArray()) {
+            int i = ch - 'a';
+            if(used[i] || self[i]) return false;
+            self[i] = true;
+        }
+        return true;
+    }
+    private void changeInCurr(boolean[] used, String s) {
+        for(char ch: s.toCharArray()) {
+            int i = ch - 'a';
+            used[i] = !used[i];
+        }
+    } 
+    public int maxLength(List<String> arr) {
+        boolean[] used = new boolean[26];
+        recursion(0, arr, used, 0);
+        return maxLen[0];
+    }
+}
