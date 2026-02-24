@@ -1,0 +1,21 @@
+class Solution {
+    public int minimumBuckets(String hamsters) {
+        boolean[] visited = new boolean[hamsters.length()];
+        for(int i = 0;  i < hamsters.length();i++){
+            if(hamsters.charAt(i) == '.') continue;
+            if( i > 0 && visited[i - 1] ) {continue;}
+            else if( i < hamsters.length() - 1 && hamsters.charAt(i+1) == '.') {
+                visited[i +1] = true;
+            }
+            else if(i > 0 && hamsters.charAt(i - 1) == '.') {
+                visited[i - 1] = true;
+            }
+            else return -1;
+        }
+        int count = 0;
+        for(boolean b:visited) {
+            if(b) count++;
+        }
+        return count;
+    }
+}
