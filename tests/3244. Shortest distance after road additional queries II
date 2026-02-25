@@ -1,0 +1,26 @@
+class Solution {
+    public int[] shortestDistanceAfterQueries(int n, int[][] queries) {
+        int[] next = new int[n];
+        int[] result = new int[queries.length];
+        for(int i = 0; i < n - 1; i++) {
+            next[i] = i+1;
+        }
+        int curr = n - 1;
+        for(int i = 0; i < queries.length; i++) {
+            int st = queries[i][0], end = queries[i][1];
+            if(next[st] != 0 && next[st] < end){
+                int j =next[st];
+                while (j < end) {
+                    int temp = next[j];
+                    next[j] = 0;
+                    j = temp;
+                    curr--;
+                }
+                
+                next[st] = end;
+            }
+            result[i] = curr;
+        }
+        return result;
+    }
+}
