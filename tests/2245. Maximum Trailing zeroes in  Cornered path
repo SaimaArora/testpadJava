@@ -1,0 +1,60 @@
+class Solution {
+    private int countTwoAndFive(int num, int n) {
+        int count = 0;
+        while(num > 0 && num % n == 0) {
+            num/=n;
+            count++;
+        }
+        return count;
+    }
+    public int maxTrailingZeros(int[][] grid) {
+        int m = grid.length, n = grid[0].length;
+        int[][] factor2 = new int[m][n];
+        int[][] factor5 = new int[m][n];
+        for(int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                factor2[i][j] = countTwoAndFive(grid[i][j], 2);
+                factor5[i][j] = countTwoAndFive(grid[i][j], 5);
+            }
+        }
+        int[][] row2 = new int[m][n];
+        int[][] row5 = new int[m][n];
+        int col2[][] = new int[m][n];
+        int col5[][] = new int[m][n];
+        for(int i = 0; i < m; i++) {
+            for(int j = 0; j < n; j++) {
+                if(i == 0) {
+                    col2[i][j] = factor2[i][j];
+                    col5[i][j] = factor5[i][j];
+                }else{
+                    col2[i][j] = factor2[i][j] + col2[i - 1][j];
+                    col5[i][j] = factor5[i][j] + col5[i - 1][j];
+                }
+                if(j == 0){
+                    row2[i][j] = factor2[i][j];
+                    row5[i][j]= factor5[i][j];
+                } 
+                else{
+                    row5[i][j] = factor5[i][j] + row5[i][j - 1];
+                    row2[i][j] = factor2[i][j] + row2[i][j - 1];
+                }
+            }
+        }
+        int ans = 0;
+        for(int i = 0; i < m; i++) {
+            for(int j = 0; j < n ; j++) {
+                //up and left
+                int ul = Math.min(col2[i][j] + row2[i][j] - factor2[i][j], col5[i][j]+row5[i][j] - factor5[i][j]);
+                // left and down
+                int ld = Math.min(row2[i][j] + col2[m - 1][j] - col2[i][j], row5[i][j] + col5[m - 1][j] - col5[i][j]);
+                //right and up
+                int ru = Math.min(row2[i][n - 1] - row2[i][j] + col2[i][j], row5[i][n - 1] - row5[i][j]+ col5[i][j]);
+                //right and down
+                int rd = Math.min(row2[i][n - 1] - row2[i][j] + col2[m - 1][j] - col2[i][j] + factor2[i][j], row5[i][n - 1] - row5[i][j] + col5[m - 1][j] - col5[i][j] + factor5[i][j]);
+                ans = Math.max(ans, Math.max(ul, Math.max(ld, Math.max(ru, rd))));
+
+            }
+        }
+        return ans;
+    }
+}
