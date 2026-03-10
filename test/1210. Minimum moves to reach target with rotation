@@ -1,0 +1,67 @@
+class Solution {
+    class Pos{
+        int i,j, moves, dir;
+        Pos(int i, int j, int d, int m) {
+            this.i = i;
+            this.j = j;
+            dir = d;
+            moves = m;
+        }
+    }
+    public boolean isValid(int i, int j, int[][] grid) {
+        return i >= 0&& j>=0&&i < grid.length && j < grid[0].length && grid[i][j] == 0;
+    }
+    public int minimumMoves(int[][] grid) {
+        int n = grid.length, m = grid[0].length;
+        Queue<Pos> q = new LinkedList<>();
+        boolean[][][] visited = new boolean[n][m][2];
+        
+        q.offer(new Pos(0, 0, 0, 0));
+        visited[0][0][0] = true;
+        while (!q.isEmpty()) {
+            Pos pos = q.poll();
+            //horizontal
+            int r = pos.i, c = pos.j, mov = pos.moves, d = pos.dir;
+            if(r == n - 1 && c == m - 2 && d == 0) return mov;
+            if(pos.dir == 0) {
+                //right h
+                if(isValid(r,c+2, grid) && !visited[r][c+1][0]) {
+                    q.offer(new Pos(r, c+1, 0, mov+1));
+                    visited[r][c+1][0] = true;
+                }
+                //down
+                if(isValid(r+1, c+1, grid) && isValid(r+1, c, grid)) {
+                    if(!visited[r+1][c][0]) {
+                        visited[r+1][c][0] = true;
+                        q.offer(new Pos(r+1, c, 0, mov+1));
+                    }
+                    if(!visited[r][c][1]){
+                        visited[r][c][1] = true;
+                        q.offer(new Pos(r, c, 1, mov+1));
+                    }
+                }
+            }
+            //vertical
+            else{
+                //down
+                if(isValid(r+2, c, grid) && !visited[r+1][c][1]) {
+                    visited[r+1][c][1] = true;
+                    q.offer(new Pos(r+1, c, 1, mov+1));
+                } 
+                //right
+                if(isValid(r+1, c+1, grid) && isValid(r, c+1, grid)) {
+                    if(!visited[r][c+1][1]){
+                        visited[r][c+1][1] = true;
+                        q.offer(new Pos(r, c+1, 1, mov+1));
+                    }
+                    if(!visited[r][c][0]) {
+                        visited[r][c][0] = true;
+                        q.offer(new Pos(r, c, 0, mov+1));
+                    }
+                }
+
+            }
+        }
+        return -1;
+    }
+}
