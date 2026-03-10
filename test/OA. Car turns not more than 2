@@ -1,0 +1,47 @@
+
+    static boolean isValid(int i, int j, int n, int m) {
+        return i < n&& j < m && i>=0 && j>= 0;
+    }
+
+    static boolean dfs(int i, int j, int turn, int prev, List<List<Character>> grid, int[][][] memo) {
+        if(!isValid(i,j,grid.size(), grid.get(0).size())) return false;
+        if(grid.get(i).get(j) == 'W') return true;
+        if(prev != -1 && memo[i][j][prev] != -1) {
+            if(turn < memo[i][j][prev]) memo[i][j][prev] = turn;
+            else return false;
+        }
+        int[] rows = {0, 1, -1, 0};
+        int[] col = {1, 0, 0, -1};
+        for(int k = 0; k < 4; k++) {
+            int newr = rows[k] + i, newc = col[k]+j;
+            if(!isValid(newr, newc,grid.size(), grid.get(0).size()) || grid.get(newr).get(newc) == 'x') continue;
+            int newturn = (prev == -1 || prev == k) ? turn:turn+1;
+            if(newturn <= 2) {
+                if(dfs(newr, newc, newturn, k, grid, memo)) return true;
+//                else return false;
+            }
+        }
+        return false;
+    }
+
+    static boolean canReach(List<List<Character>> grid) {
+        int n = grid.size(), m = grid.get(0).size();
+        int st = 0, end = 0;
+        for(int i = 0; i < n ; i++) {
+            for(int j = 0; j < m; j++) {
+                if(grid.get(i).get(j) == 'Q') {
+                    st = i;
+                    end = j;
+                    break;
+                }
+            }
+        }
+        int prev = -1, turns = 0;
+        int[][][] memo = new int[n][m][4];
+        for(int[][] a: memo) {
+            for(int[] b: a) {
+                Arrays.fill(b, -1);
+            }
+        }
+        return dfs(st, end, turns, prev, grid, memo);
+    }
