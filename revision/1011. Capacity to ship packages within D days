@@ -1,0 +1,33 @@
+class Solution {
+    private boolean possibleWeight(int[] weights, int capacity, int days) {
+        int ind = 0;
+        for (int d = 1; d <= days; d++) {
+            int sum = capacity;
+            while(ind < weights.length) {
+                if(weights[ind] <= sum){
+                    sum-=weights[ind++];
+                } 
+                else break;
+            }
+            if(ind == weights.length) return true;
+        }
+        return false;
+    }
+    public int shipWithinDays(int[] weights, int days) {
+        int sum = 0, m = 0;
+        for(int n:weights){
+            sum+=n;
+            m = Math.max(m,n);
+        } 
+        int l = m, r = sum, ans = sum;
+        while (l < r) {
+            int mid = (l+r)/2;
+            if(possibleWeight(weights, mid, days)) {
+                r = mid;
+                ans = r;
+            }
+            else l = mid+1;
+        }
+        return ans;
+    }
+}
