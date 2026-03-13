@@ -1,0 +1,38 @@
+class Solution {
+    public List<Integer> findSubstring(String s, String[] words) {
+        Map<String, Integer> wordCount = new HashMap<>();
+        int n = s.length();
+        for(String str : words) {
+            wordCount.put(str, wordCount.getOrDefault(str, 0) + 1);
+        }
+        List<Integer> res = new ArrayList<>();
+        int l = 0, k = words[0].length();
+        for(int i = 0; i < k; i++) {
+            HashMap<String, Integer> currCount = new HashMap<>();
+             l = i;
+             int count = 0;
+            for(int j = i; j <= n - k; j+=k) {
+                String curr = s.substring(j, j+k);
+                if(wordCount.containsKey(curr)) {
+                    currCount.put(curr, currCount.getOrDefault(curr, 0) + 1);
+                    count++;
+                    while(currCount.get(curr) > wordCount.get(curr)) {
+                        String leftWord = s.substring(l, l+k);
+                        currCount.put(leftWord, currCount.get(leftWord) - 1);
+                        count--;
+                        l +=k;
+                    }
+                    if(count==words.length) {
+                        res.add(l);
+                    }
+                }
+                else{
+                    //reset
+                    currCount.clear();
+                    count = 0; l = j+k; 
+                }
+            }
+        }
+        return res;
+    }
+}
