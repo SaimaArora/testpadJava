@@ -1,0 +1,19 @@
+class Solution {
+    private double fast(double x, long n) {
+        if(n == 0) return 1;
+        if(n == 1) return x;
+        double half = fast(x, n/2);
+        if(n %2==0) {
+            return (double)half*half;
+        }
+        else return (double)half*half*x;
+    }
+    public double myPow(double x, int N) {
+        long n = N;
+        if(n < 0) {
+            n = -n;
+            x = 1/x;
+        }
+        return fast(x, n);
+    }
+}
