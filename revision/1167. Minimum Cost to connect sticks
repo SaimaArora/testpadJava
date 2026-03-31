@@ -1,0 +1,12 @@
+    public int minCostConnectSticks(int[] arr){
+        int n = arr.length, total = 0;
+        PriorityQueue<Integer> pq = new PriorityQueue<>();
+        for(int st: arr) pq.offer(st);
+        while(pq.size()>1){
+            int curr = pq.poll();
+            int next = pq.poll();
+            total+=curr+next;
+            pq.offer(curr+next);
+        }
+        return total;
+    }
