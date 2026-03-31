@@ -1,0 +1,25 @@
+public int minColorGraph(int[][] adj) {
+        int n = adj.length;
+        int[] result = new int[n];
+        boolean color[] = new boolean[n];
+        Arrays.fill(result, -1);
+        result[0] = 0;
+        for(int i = 1; i < n; i++) {
+            for(int neigh: adj[i]) {
+                if(result[neigh] != -1) {
+                    color[result[neigh]] = true;
+                }
+            }
+            int col;
+            for(col = 0; col < color.length; col++) {
+                if(!color[col]) break;
+            }
+            result[i] = col;
+            for(int neigh: adj[i]){
+                if(result[neigh] != -1) color[result[neigh]] = false;
+            }
+        }
+        int ans = 0;
+        for(int c:result) ans = Math.max(c+1, ans);
+        return ans;
+    }
