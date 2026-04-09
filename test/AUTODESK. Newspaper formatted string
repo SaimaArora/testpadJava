@@ -1,0 +1,38 @@
+private String formatString(List<String> curr, int len, int width) {
+        StringBuilder str = new StringBuilder();
+        for(int i = 0; i < curr.size(); i++) {
+            str.append(curr.get(i));
+            if(i != curr.size() - 1) str.append(" ");
+        }
+        int leftover = width - len;
+        int spLeft = leftover/2;
+        int spRight = leftover - spLeft;
+        return "*"+" ".repeat(spLeft) + str.toString()+" ".repeat(spRight)+"*";
+    }
+    
+    public String[] formParaNewspaper(String[][] para, int width) {
+        List<String> ans = new ArrayList<>();
+        String border = "*".repeat(width+2);
+        ans.add(border);
+        for(String[] p : para) {
+            List<String> currentWords = new ArrayList<>();
+            int currLen = 0;
+            for(String word:p) {
+                int sp = currentWords.isEmpty() ? 0: 1;
+                if(currLen + sp + word.length() <= width) {
+                    currentWords.add(word);
+                    currLen+=sp+word.length();
+                } else {
+                    ans.add(formatString(currentWords, currLen, width));
+                    currentWords = new ArrayList<>();
+                    currentWords.add(word);
+                    currLen = word.length();
+                }
+            }
+            if(!currentWords.isEmpty()) {
+                ans.add(formatString(currentWords, currLen, width)); 
+            }
+        }
+        ans.add(border);
+        return ans.toArray(new String[0]);
+    }
