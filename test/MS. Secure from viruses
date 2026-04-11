@@ -1,5 +1,17 @@
 
+    int maxInfect = 0, minTime = Integer.MAX_VALUE;
+    Set<String> visited = new HashSet<>();
 
+    private String encode(int[][] grid, int k) {
+        StringBuilder str = new StringBuilder();
+        for(int[]r : grid) {
+            for(int val:r) {
+                str.append(val).append(",");
+            }
+        }
+        str.append("|").append(k);
+        return str.toString();
+    }
     public int[][] getNextMinuteGrid(int[][] grid) {
         int m = grid.length, n = grid[0].length;
         int[][] next = new int[m][n];
@@ -61,15 +73,17 @@
         return Arrays.deepEquals(grid, next);
     }
 
-    int maxInfect = 0, minTime = -1;
 
     //starting
     public int solveSecure(int[][] grid, int k, int t) {
         solve(grid, k, t, 0);
-        return (minTime == -1) ? maxInfect:minTime;
+        return (minTime == Integer.MAX_VALUE) ? maxInfect:minTime;
     }
     //backtracking brain of the question - two options - dont use a patch, pick a cell, set it -1 and see in next minute
     public void solve(int[][] grid, int k, int t, int time) {
+        String key = encode(grid, k);
+        if(visited.contains(key)) return;
+        visited.add(key);
         if(isBoundaryHit(grid)) {
             maxInfect = Math.max(maxInfect, count2s(grid));
             return;
@@ -78,23 +92,27 @@
             minTime = Math.min(minTime, time);
             return;
         }
-        int[][] next = getNextMinuteGrid(grid);
-        //1 = do nothing go for next minute
-        solve(next, k, t, time+1);
+        if(time >= minTime) return;
+        int m = grid.length, n = grid[0].length;
         //2- use patch
         if(k > 0) {
             for(int r = 0; r < grid.length; r++) {
                 for(int c = 0; c < grid[0].length; c++) {
                     if(grid[r][c] == 1 || grid[r][c] == 0){
                         if(canPatch(grid, r, c, t)) {
-                            int ori = grid[r][c];
-                            grid[r][c] = -1;
+                            int[][] patched= new int[m][n];
+                            for(int i = 0; i < m; i++)patched[i] = grid[i].clone();
+                            patched[r][c] = -1;
+                            int[][] next = getNextMinuteGrid(patched);
                             solve(next, k - 1, t, time+1);
-                            grid[r][c] = ori;
                         }
                     }
                 }
             }
         }
+
+        int[][] next = getNextMinuteGrid(grid);
+        //1 = do nothing go for next minute
+        solve(next, k, t, time+1);
     }
 
