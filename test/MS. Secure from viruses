@@ -1,0 +1,100 @@
+
+
+    public int[][] getNextMinuteGrid(int[][] grid) {
+        int m = grid.length, n = grid[0].length;
+        int[][] next = new int[m][n];
+        for(int i = 0; i < m ; i++) next[i] = grid[i].clone();
+        int[] rows = {0, 1,-1, 0};
+        int[] cols = {1, 0, 0,-1};
+        for(int i = 0; i < m; i++) {
+            for(int j = 0; j < n; j++) {
+                if(grid[i][j] == 2) {
+                    for(int k = 0; k < 4; k++) {
+                        int newr = rows[k] + i, newc = cols[k]+j;
+                        if(newr < m && newc < n && newr >= 0 && newc >= 0) {
+                            if(grid[newr][newc] == 0 || grid[newr][newc] == 1) {
+                                next[newr][newc] = 2;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return next;
+    }
+
+    //helpers
+    //boundary check
+    private boolean isBoundaryHit(int[][] grid) {
+        int m = grid.length, n = grid[0].length;
+        for(int i = 0; i < m; i++) {
+            for(int j = 0; j < n; j++) {
+                if(grid[i][j] == 2) {
+                    if(i == 0 || j == 0 || i == m - 1 || j == n - 1) return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    // check ocndition of threshold
+    private boolean canPatch(int[][] grid, int r, int c, int t) {
+        int m = grid.length, n = grid[0].length, count = 0;
+        for(int i = 0; i < m ; i++) {
+            if(grid[i][c] == 2) count++;
+        }
+        for(int j = 0; j < n; j++) {
+            if(grid[r][j] == 2) count++;
+        }
+        return count <= t;
+    }
+
+    //count 2s in grid
+    private int count2s(int[][] grid) {
+        int count = 0;
+        for(int[] r: grid) for(int n: r) if(n == 2) count++;
+        return count;
+    }
+    //if next grid is same as curr then it is contained
+    private boolean isContained(int[][] grid) {
+        int[][] next = getNextMinuteGrid(grid);
+        return Arrays.deepEquals(grid, next);
+    }
+
+    int maxInfect = 0, minTime = -1;
+
+    //starting
+    public int solveSecure(int[][] grid, int k, int t) {
+        solve(grid, k, t, 0);
+        return (minTime == -1) ? maxInfect:minTime;
+    }
+    //backtracking brain of the question - two options - dont use a patch, pick a cell, set it -1 and see in next minute
+    public void solve(int[][] grid, int k, int t, int time) {
+        if(isBoundaryHit(grid)) {
+            maxInfect = Math.max(maxInfect, count2s(grid));
+            return;
+        }
+        if(isContained(grid)) {
+            minTime = Math.min(minTime, time);
+            return;
+        }
+        int[][] next = getNextMinuteGrid(grid);
+        //1 = do nothing go for next minute
+        solve(next, k, t, time+1);
+        //2- use patch
+        if(k > 0) {
+            for(int r = 0; r < grid.length; r++) {
+                for(int c = 0; c < grid[0].length; c++) {
+                    if(grid[r][c] == 1 || grid[r][c] == 0){
+                        if(canPatch(grid, r, c, t)) {
+                            int ori = grid[r][c];
+                            grid[r][c] = -1;
+                            solve(next, k - 1, t, time+1);
+                            grid[r][c] = ori;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
