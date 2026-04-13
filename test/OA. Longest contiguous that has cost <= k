@@ -1,0 +1,16 @@
+    public int longestRatingWithCostAddition(int[] rating, int[] cost, int k) {
+        int n = rating.length, l = 0, maxCost = 0, total = 0, ans = 0;
+        HashMap<Integer, Integer> weight = new HashMap<>();
+        for(int r = 0;r < n; r++) {
+            weight.put(rating[r], weight.getOrDefault(rating[r], 0) + cost[r]);
+            maxCost = Math.max(maxCost, weight.get(rating[r]));
+            total+=cost[r];
+            while(total - maxCost > k) {
+                weight.put(rating[l], weight.get(rating[l]) - cost[l]);
+                total-=cost[l];
+                l++;
+            }
+            ans = Math.max(ans, r - l+1);
+        }
+        return ans;
+    }
