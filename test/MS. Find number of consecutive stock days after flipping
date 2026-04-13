@@ -1,0 +1,30 @@
+    public int calcMaximumStockConsectuive(String stock, int k) {
+        int l = 0, maxLen = 0, zero = 0,n = stock.length(), limit = k;
+        for(int r = 0; r < n;r++) {
+            if(stock.charAt(r) == '0') zero++;
+            while(zero > limit) {
+                if(stock.charAt(l) == '0') zero--;
+                l++;
+            }
+            maxLen = Math.max(maxLen, r - l+1);
+        }
+        l= 0; zero = 0;
+        HashSet<String> res = new HashSet<>();
+        for(int r = 0; r < n; r++) {
+            if(stock.charAt(r) == '0') zero++;
+            while(zero > limit) {
+                if(stock.charAt(l) == '0') zero--;
+                l++;
+            }
+            if(r - l+1 == maxLen) {
+                char[] ch = stock.toCharArray();
+                for(int i = l; i <= r; i++) {
+                    if(ch[i] == '0') {
+                        ch[i] = '1';
+                    }
+                }
+                res.add(new String(ch));
+            }
+        }
+        return res.size();
+    }
