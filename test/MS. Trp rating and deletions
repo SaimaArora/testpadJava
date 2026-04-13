@@ -1,0 +1,23 @@
+
+    public void trpRating(int[] rating) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for(int num : rating) {
+            map.put(num , map.getOrDefault(num, 0) +num);
+        }
+        List<Integer> set = new ArrayList(map.keySet());
+        Collections.sort(set);
+        Integer memo [] = new Integer[set.size()];
+        dfs(0, set, map, memo);
+    }
+    private int dfs(int ind, List<Integer> set, HashMap<Integer, Integer> map, Integer[] memo ) {
+        if(ind >= set.size()) return 0;
+        if(memo[ind] != null) return memo[ind];
+        int notTake = dfs(ind+1, set, map, memo);
+        int take = map.get(set.get(ind));
+        int newInd = ind;
+        if(set.get(ind) + 1 == set.get(ind+1)) {
+            newInd++;
+        }
+        take +=dfs(newInd+1, set, map, memo);
+        return memo[ind] = Math.max(take, notTake);
+    }
