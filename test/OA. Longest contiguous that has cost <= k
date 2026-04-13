@@ -1,3 +1,4 @@
+
     public int longestRatingWithCostAddition(int[] rating, int[] cost, int k) {
         int n = rating.length, l = 0, maxCost = 0, total = 0, ans = 0;
         HashMap<Integer, Integer> weight = new HashMap<>();
@@ -12,5 +13,30 @@
             }
             ans = Math.max(ans, r - l+1);
         }
-        return ans;
+
+        //part2 - return all distinct/unique combinations that are formed for the given length
+        int len = ans;
+        total = 0;
+        weight = new HashMap<>();
+        HashSet<String> result = new HashSet<>();
+        for(int r = 0; r < n; r++) {
+            total+=cost[r];
+            weight.put(rating[r], weight.getOrDefault(rating[r], 0) + cost[r]);
+            if(r>=len) {
+                int left = r - len;
+                total-=cost[left];
+                weight.put(rating[left], weight.get(rating[left])-cost[left]);
+                if(weight.get(rating[left]) == 0) weight.remove(rating[left]);
+            }
+            if(r>= len - 1) {
+                for(int key:weight.keySet()){
+                    int size = weight.get(key);
+                    if(total - size <= k) {
+                        result.add((r - len +1)+","+ r+"," +key);
+                    }
+                }
+            }
+        }
+
+        return result.size();
     }
