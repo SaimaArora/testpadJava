@@ -1,0 +1,19 @@
+    //give longest after <=k changes in elements
+    public int longestAfterOperation(int[]arr, int k) {
+        int l = 0, n = arr.length, maxFreq = 0, ans = 0;
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for(int r = 0; r < n; r++) {
+            map.put(arr[r], map.getOrDefault(arr[r], 0) +1);
+            maxFreq = Math.max(maxFreq, map.get(arr[r]));
+            int size = r - l+1;
+            if(size - maxFreq <= k) {
+                ans = Math.max(ans, size);
+            } else{
+                map.put(arr[l], map.get(arr[l]) - 1);
+                if(map.get(arr[l]) == 0) map.remove(arr[l]);
+                l++;
+
+            }
+        }
+        return ans;
+    }
