@@ -1,0 +1,17 @@
+// User function Template for Java
+
+class Solution {
+    public int recursion(int[] arr, int ind, int[] memo) {
+        if(ind >= arr.length) return 0;
+        if(memo[ind] != -1) return memo[ind];
+        int notTake = recursion(arr, ind+1, memo);
+        int take = arr[ind]+recursion(arr, ind+2, memo);
+        return memo[ind] = Math.max(notTake, take);
+    }
+    int findMaxSum(int arr[]) {
+        // code here
+        int[] memo = new int[arr.length];
+        Arrays.fill(memo, -1);
+        return recursion(arr, 0, memo);
+    }
+}
