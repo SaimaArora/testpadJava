@@ -1,0 +1,35 @@
+
+    private boolean isInside(int r, int c, int[][] chess){
+        return r >= 0&& c >= 0&& r < chess.length && c < chess[0].length;
+    }
+    public int moveRook(int[][] chess, int str, int stc){
+        int n = chess.length, m = chess[0].length;
+        str -= 1; stc-=1;
+        int[][] dist = new int[n][m];
+        for(int[] r:dist) Arrays.fill(r, Integer.MAX_VALUE);
+        int[]rows = new int[]{0, 0,1,-1};
+        int[] cols = new int[]{1, -1, 0,0};
+        Queue<int[]> q = new LinkedList<>();
+        q.add(new int[]{str, stc});
+        dist[str][stc] = 0;
+        while (!q.isEmpty()) {
+            int[] curr = q.poll();
+            int r= curr[0], c = curr[1];
+            for(int i = 0; i < 4; i++) {
+                int newr = rows[i]+r, newc = cols[i]+c;
+                while(isInside(newr, newc, chess) && chess[newr][newc] != 1) {
+                    if(dist[newr][newc] > dist[r][c] + 1) {
+                        dist[newr][newc] = dist[r][c] + 1;
+                        if(newr == n - 1 && newc == m - 1) return dist[newr][newc];
+                        q.offer(new int[]{newr, newc});
+                    }
+                    else if(dist[newr][newc] < dist[r][c] + 1) {
+                        break;
+                    }
+                    newr+=rows[i]; newc+=cols[i];
+                }
+            }
+
+        }
+        return -1;
+    }
